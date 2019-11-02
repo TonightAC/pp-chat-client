@@ -1,11 +1,22 @@
 <template>
     <el-container class="el-container">
-        <el-header class="el-header"></el-header>
+        <el-header class="el-header">
+            <i class="el-icon-arrow-left" style="position: absolute; top: 50%; transform: translateY(-50%); font-size: 20px"></i>
+            <div style="font-size: 16px; position: absolute; left: 50%; top: 50%; transform: translateX(-50%) translateY(-50%)">{{ name }}</div>
+        </el-header>
         <el-main class="el-main">
-            <div class="infinite-list" v-infinite-scroll="load" style="overflow: auto; padding: 10px 10px 0 10px">
+            <div id="text-area" style="overflow: auto; padding: 10px 10px 0 10px">
                 <div v-for="msg in msgList" class="infinite-list-item" :key="msg.index" style="margin-bottom: 10px">
-                    <el-card style="margin-right: 100px; padding: 5px" v-if="false"><span>{{ msg }}</span></el-card>
-                    <el-card shadow="always" style="margin-left: 100px" v-else><span>{{ msg }}</span></el-card>
+                    <div style="text-align: left" v-if="msg.flag">
+                        <el-card class="el-card" :body-style="{ padding: '12px' }" shadow="never" style="max-width: 75%">
+                            <span style="word-break: break-all; white-space: normal">{{ msg.data }}</span>
+                        </el-card>
+                    </div>
+                    <div style="text-align: right" v-else>
+                        <el-card class="el-card" :body-style="{ padding: '12px' }" shadow="never" style="max-width: 75%; background-color: #409EFF">
+                            <span style="word-break: break-all; white-space: normal; color: white">{{ msg.data }}</span>
+                        </el-card>
+                    </div>
                 </div>
             </div>
         </el-main>
@@ -19,11 +30,13 @@
 </template>
 
 <script>
+    import { Toast } from 'mint-ui';
     export default {
         name: "Home",
         data () {
             return {
                 socket: null,
+                name: '未连接',
                 path: 'ws://localhost:1979/websocket/',
                 id: '100000',
                 input: '',
@@ -38,15 +51,21 @@
             this.socket.onerror = this.error;
         },
         methods: {
-            load () {
-            },
             sendMessage () {
-                this.socket.send(this.input);
-                this.msgList.push(this.input);
-                this.input = '';
+                if (this.input === '') {
+                    Toast({
+                        message: '输入不能为空',
+                        position: 'bottom',
+                        duration: 2000
+                    })
+                } else {
+                    this.socket.send(this.input);
+                    this.msgList.push({flag: false, data: this.input});
+                    this.input = '';
+                }
             },
             getMessage (msg) {
-                this.msgList.push(msg.data);
+                this.msgList.push({flag: true, data: msg.data});
             },
             open () {
             },
@@ -97,5 +116,8 @@
     }
     .el-button {
         width: 100%;
+    }
+    .el-card {
+        display: inline-block;
     }
 </style>

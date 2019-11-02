@@ -1,15 +1,10 @@
 <template>
-  <Main />
+  <router-view/>
 </template>
 
 <script>
-import Main from './components/Main'
-
 export default {
-  name: 'app',
-  components: {
-    Main
-  }
+  name: 'app'
 }
 </script>
 

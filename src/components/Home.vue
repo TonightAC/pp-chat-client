@@ -1,24 +1,22 @@
 <template>
     <el-container class="el-container">
         <el-header class="el-header">
-            <el-card style="width: 1000px; height: 100%; border-radius: 0;" shadow="never">
+            <el-card style="width: 100%; height: 100%; border-radius: 0" shadow="never">
                 <i class="el-icon-arrow-left" style="position: absolute; top: 50%; transform: translateY(-50%); font-size: 20px"></i>
                 <div style="font-size: 16px; position: absolute; left: 50%; top: 50%; transform: translateX(-50%) translateY(-50%)">{{ name }}</div>
             </el-card>
         </el-header>
-        <el-main class="el-main">
-            <div id="text-area" style="overflow: auto; padding: 10px 10px 0 10px">
-                <div v-for="msg in msgList" class="infinite-list-item" :key="msg.index" style="margin-bottom: 10px">
-                    <div style="text-align: left" v-if="msg.flag">
-                        <el-card class="el-card" :body-style="{ padding: '12px' }" shadow="never" style="max-width: 75%">
-                            <span style="word-break: break-all; white-space: normal">{{ msg.data }}</span>
-                        </el-card>
-                    </div>
-                    <div style="text-align: right" v-else>
-                        <el-card class="el-card" :body-style="{ padding: '12px' }" shadow="never" style="max-width: 75%; background-color: #409EFF">
-                            <span style="word-break: break-all; white-space: normal; color: white">{{ msg.data }}</span>
-                        </el-card>
-                    </div>
+        <el-main id="container" class="el-main">
+            <div v-for="msg in msgList" :key="msg.index" style="margin-bottom: 5px">
+                <div style="text-align: left" v-if="msg.flag">
+                    <el-card class="el-card" :body-style="{ padding: '12px' }" shadow="never" style="max-width: 75%">
+                        <span style="word-break: break-all; white-space: normal">{{ msg.data }}</span>
+                    </el-card>
+                </div>
+                <div style="text-align: right" v-else>
+                    <el-card class="el-card" :body-style="{ padding: '12px' }" shadow="never" style="max-width: 75%; background-color: #409EFF">
+                        <span style="word-break: break-all; white-space: normal; color: white">{{ msg.data }}</span>
+                    </el-card>
                 </div>
             </div>
         </el-main>
@@ -64,10 +62,18 @@
                     this.socket.send(this.input);
                     this.msgList.push({flag: false, data: this.input});
                     this.input = '';
+                    this.$nextTick(() => {
+                        let container = this.$el.querySelector("#container");
+                        container.scrollTop = container.scrollHeight;
+                    })
                 }
             },
             getMessage (msg) {
                 this.msgList.push({flag: true, data: msg.data});
+                this.$nextTick(() => {
+                    let container = this.$el.querySelector("#container");
+                    container.scrollTop = container.scrollHeight;
+                })
             },
             open () {
             },
@@ -98,7 +104,7 @@
         right: 0;
         top: 0;
         bottom: 0;
-        padding: 0;
+        padding: 10px 10px 0 10px;
     }
     .el-footer {
         position: absolute;

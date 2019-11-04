@@ -4,41 +4,55 @@
             <img src="../assets/PP-logo.png" style="width: 300px; height: 100px" alt="pp-logo"/>
         </div>
         <div style="width: 260px; position: absolute; left: 50%; top: 50%; transform: translateX(-50%) translateY(-50%)">
-            <el-input v-model="ppid" placeholder="请输入PP号码"></el-input>
+            <el-input v-model="nickname" placeholder="请输入昵称"></el-input>
             <el-input style="margin-top: 13px" v-model="pwd" placeholder="请输入密码" show-password></el-input>
-            <div style="margin-left: 25px; margin-top: 13px; width: 250px">
-                <el-button style="width: 100px" @click="signUp" plain>注册</el-button>
-                <el-button style="width: 100px;" @click="login" type="primary" plain>登陆</el-button>
+            <div style="margin-left: 30px; margin-top: 13px; width: 250px">
+                <el-button style="width: 200px" @click="signUp" type="primary" plain>注册</el-button>
             </div>
         </div>
+        <el-dialog :visible.sync="dialogVisible" width="60%">
+            <h4>请记住您的PP号码，</h4>
+            <h4>下次登录时使用。</h4>
+            <h2 style="text-align: center; padding-top: 20px">{{ this.ppid }}</h2>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="confirmPpid">确定</el-button>
+            </span>
+        </el-dialog>
     </el-main>
 </template>
 
 <script>
     import { Toast } from 'mint-ui';
     export default {
-        name: "Login",
+        name: "SignUp",
         data () {
             return {
                 ppid: '',
-                pwd: ''
+                nickname: '',
+                pwd: '',
+                dialogVisible: false
             }
         },
         methods: {
-            login () {
-                this.axios.get('/user/login?ppid=' + this.ppid + '&pwd=' + this.pwd).then(res => {
+            confirmPpid () {
+                this.dialogVisible = false;
+                this.$router.push({ name : 'Main' });
+            },
+            signUp () {
+                this.axios.post('/user/signUp?nickname=' + this.nickname + '&pwd=' + this.pwd).then(res => {
                     if(res.data.code === '0000'){
                         localStorage.setItem('ppid', res.data.data.ppid);
                         localStorage.setItem('nickname', res.data.data.nickname);
+                        this.ppid = res.data.data.ppid;
                         Toast({
-                            message: '登陆成功',
+                            message: '注册成功',
                             position: 'bottom',
                             duration: 2000
                         });
-                        this.$router.push({ name : 'Main' });
+                        this.dialogVisible = true;
                     } else {
                         Toast({
-                            message: '登陆失败',
+                            message: '注册失败',
                             position: 'bottom',
                             duration: 2000
                         });
@@ -51,10 +65,7 @@
                     });
                     // eslint-disable-next-line no-console
                     console.log(error);
-                })
-            },
-            signUp () {
-                this.$router.push({ name : 'SignUp' });
+                });
             }
         }
     }

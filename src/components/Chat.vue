@@ -32,7 +32,7 @@
 <script>
     import { Toast } from 'mint-ui';
     export default {
-        name: "Home",
+        name: "Chat",
         data () {
             return {
                 socket: null,

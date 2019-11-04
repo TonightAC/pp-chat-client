@@ -38,12 +38,14 @@
                 socket: null,
                 name: '未连接',
                 path: 'ws://localhost:1979/websocket/',
-                id: '100000',
+                id: '',
                 input: '',
                 msgList: []
             }
         },
         created () {
+            // this.id = localStorage.getItem("ppid");
+            this.id = '1531728675';
             this.socket = new WebSocket(this.path + this.id);
             this.socket.onmessage = this.getMessage;
             this.socket.onopen = this.open;
@@ -59,7 +61,7 @@
                         duration: 2000
                     })
                 } else {
-                    this.socket.send(this.input);
+                    this.socket.send(JSON.stringify({from: this.id, to: this.id, data: this.input}));
                     this.msgList.push({flag: false, data: this.input});
                     this.input = '';
                     this.$nextTick(() => {
@@ -69,7 +71,8 @@
                 }
             },
             getMessage (msg) {
-                this.msgList.push({flag: true, data: msg.data});
+                let result = JSON.parse(msg.data);
+                this.msgList.push({flag: true, data: result.data});
                 this.$nextTick(() => {
                     let container = this.$el.querySelector("#container");
                     container.scrollTop = container.scrollHeight;

@@ -2,7 +2,7 @@
     <el-container class="el-container">
         <el-header class="el-header">
             <el-card style="width: 100%; height: 100%; border-radius: 0" shadow="never">
-                <i class="el-icon-arrow-left" style="position: absolute; top: 50%; transform: translateY(-50%); font-size: 20px"></i>
+                <i @click="back" class="el-icon-arrow-left" style="position: absolute; top: 50%; transform: translateY(-50%); font-size: 20px"></i>
                 <div style="font-size: 16px; position: absolute; left: 50%; top: 50%; transform: translateX(-50%) translateY(-50%)">{{ name }}</div>
             </el-card>
         </el-header>
@@ -44,8 +44,8 @@
             }
         },
         created () {
-            // this.id = localStorage.getItem("ppid");
-            this.id = '1531728675';
+            this.name = this.$route.params.nickname;
+            this.id = localStorage.getItem("ppid");
             this.socket = new WebSocket(this.path + this.id);
             this.socket.onmessage = this.getMessage;
             this.socket.onopen = this.open;
@@ -61,7 +61,7 @@
                         duration: 2000
                     })
                 } else {
-                    this.socket.send(JSON.stringify({from: this.id, to: this.id, data: this.input}));
+                    this.socket.send(JSON.stringify({from: this.id, to: this.$route.params.ppid, data: this.input}));
                     this.msgList.push({flag: false, data: this.input});
                     this.input = '';
                     this.$nextTick(() => {
@@ -83,6 +83,9 @@
             close () {
             },
             error () {
+            },
+            back () {
+                this.$router.push({name: 'Main'})
             }
         }
     }

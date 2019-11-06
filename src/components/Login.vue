@@ -28,6 +28,7 @@
             login () {
                 this.axios.get('/user/login?ppid=' + this.ppid + '&pwd=' + this.pwd).then(res => {
                     if(res.data.code === '0000'){
+                        localStorage.setItem('uid', res.data.data.uid);
                         localStorage.setItem('ppid', res.data.data.ppid);
                         localStorage.setItem('nickname', res.data.data.nickname);
                         Toast({

@@ -13,7 +13,7 @@
                     <el-card @click.native="clickItem(friend.ppid, friend.nickname)"  style="border-top: 0; border-left: 0; border-right: 0; position: relative;" :body-style="{ padding: '20px' }" shadow="never" >
                         <el-avatar style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%)" size="large" :src="circleUrl"></el-avatar>
                         <span style="margin-left: 50px">{{ friend.nickname }}</span>
-                        <el-badge style="position: absolute; right: 10px" class="mark" :value="3" />
+                        <el-badge style="position: absolute; right: 10px" class="mark" :value="friend.messages.length" v-if="friend.messages.length !== 0"/>
                     </el-card>
                 </div>
             </div>
@@ -42,18 +42,19 @@
             }
         },
         created () {
-            this.axios.get('/user/getFriends?uid=' + localStorage.getItem('uid')).then(res => {
+            this.axios.get('/user/getFriends?uid=' + localStorage.getItem('uid') + '&ppid=' + localStorage.getItem('ppid')).then(res => {
                 if(res.data.code === '0000'){
                     for (let i = 0; i < res.data.data.length; i++){
                         this.friendList.push({
                             uid: res.data.data[i].uid,
                             ppid: res.data.data[i].ppid,
-                            nickname: res.data.data[i].nickname
+                            nickname: res.data.data[i].nickname,
+                            messages: res.data.data[i].messages
                         });
                     }
                 } else {
                     Toast({
-                        message: '查询失败',
+                        message: '好友查询失败',
                         position: 'bottom',
                         duration: 2000
                     });
@@ -67,7 +68,6 @@
                 // eslint-disable-next-line no-console
                 console.log(error);
             });
-
         },
         methods: {
             openSetting () {

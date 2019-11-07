@@ -36,6 +36,7 @@
         name: "Main",
         data () {
             return {
+                path: 'ws://192.168.1.107:1979/websocket/',
                 socket: null,
                 switchFlag: true,
                 friendList: [],
@@ -43,9 +44,9 @@
             }
         },
         created () {
-            // this.socket = new WebSocket(this.path + this.id);
             this.axios.get('/user/getFriends?uid=' + localStorage.getItem('uid') + '&ppid=' + localStorage.getItem('ppid')).then(res => {
                 if(res.data.code === '0000'){
+                    this.socket = new WebSocket(this.path + localStorage.getItem('ppid'));
                     for (let i = 0; i < res.data.data.length; i++){
                         this.friendList.push({
                             uid: res.data.data[i].uid,
@@ -78,7 +79,7 @@
             clickItem (ppid, nickname) {
                 // eslint-disable-next-line no-console
                 console.log('click');
-                this.$router.push({ name: 'Chat', params: { ppid: ppid, nickname: nickname} });
+                this.$router.push({ name: 'Chat', params: { ppid: ppid, nickname: nickname, socket: this.socket} });
             },
             switchFriends () {
                 this.switchFlag = true;

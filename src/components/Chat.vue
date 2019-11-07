@@ -39,7 +39,6 @@
             return {
                 socket: null,
                 name: '未连接',
-                path: 'ws://localhost:1979/websocket/',
                 id: '',
                 input: '',
                 msgList: []
@@ -48,11 +47,14 @@
         created () {
             if(this.$route.params.nickname != null) this.name = this.$route.params.nickname;
             this.id = localStorage.getItem("ppid");
-            this.socket = ;
+            this.socket = this.$route.params.socket;
             this.socket.onmessage = this.getMessage;
             this.socket.onopen = this.open;
             this.socket.onclose = this.close;
             this.socket.onerror = this.error;
+        },
+        destroyed () {
+            this.socket.close();
         },
         methods: {
             sendMessage () {
@@ -65,7 +67,6 @@
                 } else {
                     this.socket.send(JSON.stringify({from: this.id, to: this.$route.params.ppid, data: this.input}));
                     this.msgList.push({flag: false, data: this.input});
-                    this.msgList.push({flag: true, data: this.input});
                     this.input = '';
                     this.$nextTick(() => {
                         let container = this.$el.querySelector("#container");

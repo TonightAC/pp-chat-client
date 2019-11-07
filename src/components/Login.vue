@@ -36,6 +36,7 @@
                             position: 'bottom',
                             duration: 2000
                         });
+                        sessionStorage.setItem('token', 'true');
                         this.$router.push({ name : 'Main' });
                     } else {
                         Toast({

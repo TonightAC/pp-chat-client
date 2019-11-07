@@ -8,12 +8,60 @@ import Setting from '../components/Setting';
 
 Vue.use(VueRouter);
 
-export default new VueRouter({
+const router = new VueRouter({
     routes: [
-        { path: '/', name: 'Main', component: Main },
-        { path: '/login', name: 'Login', component: Login },
-        { path: '/signUp', name: 'SignUp', component: SignUp },
-        { path: '/chat', name: 'Chat', component: Chat },
-        { path: '/setting', name: 'Setting', component: Setting }
+        {
+            path: '/',
+            name: 'Main',
+            component: Main,
+            meta: {
+                requireAuth: true,
+                keepAlive: true
+            }
+        },
+        {
+            path: '/login',
+            name: 'Login',
+            component: Login
+        },
+        {
+            path: '/signUp',
+            name: 'SignUp',
+            component: SignUp
+        },
+        {
+            path: '/chat',
+            name: 'Chat',
+            component: Chat,
+            meta: {
+                requireAuth: true
+            }
+
+        },
+        {
+            path: '/setting',
+            name: 'Setting',
+            component: Setting,
+            meta: {
+                requireAuth: true
+            }
+        }
     ]
-})
+});
+
+export default router;
+
+router.beforeEach((to, from, next) => {
+    if (to.meta.requireAuth) {
+        if (sessionStorage.getItem("token") === 'true') {
+            next();
+        } else {
+            next({
+                path: '/login'
+            });
+        }
+    } else {
+        next();
+    }
+});
+

@@ -36,12 +36,14 @@
         name: "Main",
         data () {
             return {
+                socket: null,
                 switchFlag: true,
                 friendList: [],
                 groupList: []
             }
         },
         created () {
+            // this.socket = new WebSocket(this.path + this.id);
             this.axios.get('/user/getFriends?uid=' + localStorage.getItem('uid') + '&ppid=' + localStorage.getItem('ppid')).then(res => {
                 if(res.data.code === '0000'){
                     for (let i = 0; i < res.data.data.length; i++){

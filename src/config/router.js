@@ -1,10 +1,10 @@
 import VueRouter from 'vue-router';
 import Vue from 'vue';
-import Main from './components/Main';
-import Login from './components/Login';
-import SignUp from './components/SignUp';
-import Chat from './components/Chat';
-import Setting from './components/Setting';
+import Main from '../components/Main';
+import Login from '../components/Login';
+import SignUp from '../components/SignUp';
+import Chat from '../components/Chat';
+import Setting from '../components/Setting';
 
 Vue.use(VueRouter);
 

@@ -8,15 +8,17 @@
         </el-header>
         <el-main id="container" class="el-main">
             <div v-for="msg in msgList" :key="msg.index" style="margin-bottom: 5px">
-                <div style="text-align: left" v-if="msg.flag">
-                    <el-card class="el-card" :body-style="{ padding: '12px' }" shadow="never" style="max-width: 75%">
+                <div style="text-align: left; position: relative" v-if="msg.flag">
+                    <el-avatar size="large" :src="circleUrl" style="position: absolute; top: 3px; left: 0"></el-avatar>
+                    <el-card class="el-card" :body-style="{ padding: '12px' }" shadow="never" style="max-width: 75%; margin-left: 50px">
                         <span style="word-break: break-all; white-space: normal">{{ msg.data }}</span>
                     </el-card>
                 </div>
-                <div style="text-align: right" v-else>
-                    <el-card class="el-card" :body-style="{ padding: '12px' }" shadow="never" style="max-width: 75%; background-color: #409EFF">
+                <div style="text-align: right; position: relative" v-else>
+                    <el-card class="el-card" :body-style="{ padding: '12px' }" shadow="never" style="max-width: 75%; background-color: #409EFF; margin-right: 50px">
                         <span style="word-break: break-all; white-space: normal; color: white">{{ msg.data }}</span>
                     </el-card>
+                    <el-avatar size="large" :src="circleUrl" style="position: absolute; top: 3px; right: 0"></el-avatar>
                 </div>
             </div>
         </el-main>
@@ -44,9 +46,9 @@
             }
         },
         created () {
-            this.name = this.$route.params.nickname;
+            if(this.$route.params.nickname != null) this.name = this.$route.params.nickname;
             this.id = localStorage.getItem("ppid");
-            this.socket = new WebSocket(this.path + this.id);
+            this.socket = ;
             this.socket.onmessage = this.getMessage;
             this.socket.onopen = this.open;
             this.socket.onclose = this.close;
@@ -63,6 +65,7 @@
                 } else {
                     this.socket.send(JSON.stringify({from: this.id, to: this.$route.params.ppid, data: this.input}));
                     this.msgList.push({flag: false, data: this.input});
+                    this.msgList.push({flag: true, data: this.input});
                     this.input = '';
                     this.$nextTick(() => {
                         let container = this.$el.querySelector("#container");

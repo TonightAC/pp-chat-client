@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import App from './App.vue';
-import router from './router'
+import router from './config/router'
 import ElementUI from 'element-ui';
 import Mint from 'mint-ui';
 import 'element-ui/lib/theme-chalk/index.css';

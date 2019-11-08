@@ -41,9 +41,9 @@
             signUp () {
                 this.axios.post('/user/signUp?nickname=' + this.nickname + '&pwd=' + this.pwd).then(res => {
                     if(res.data.code === '0000'){
-                        localStorage.setItem('uid', res.data.data.uid);
-                        localStorage.setItem('ppid', res.data.data.ppid);
-                        localStorage.setItem('nickname', res.data.data.nickname);
+                        sessionStorage.setItem('uid', res.data.data.uid);
+                        sessionStorage.setItem('ppid', res.data.data.ppid);
+                        sessionStorage.setItem('nickname', res.data.data.nickname);
                         this.ppid = res.data.data.ppid;
                         Toast({
                             message: '注册成功',

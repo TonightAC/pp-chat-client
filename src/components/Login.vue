@@ -28,9 +28,9 @@
             login () {
                 this.axios.get('/user/login?ppid=' + this.ppid + '&pwd=' + this.pwd).then(res => {
                     if(res.data.code === '0000'){
-                        localStorage.setItem('uid', res.data.data.uid);
-                        localStorage.setItem('ppid', res.data.data.ppid);
-                        localStorage.setItem('nickname', res.data.data.nickname);
+                        sessionStorage.setItem('uid', res.data.data.uid);
+                        sessionStorage.setItem('ppid', res.data.data.ppid);
+                        sessionStorage.setItem('nickname', res.data.data.nickname);
                         Toast({
                             message: '登陆成功',
                             position: 'bottom',

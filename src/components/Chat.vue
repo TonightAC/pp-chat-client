@@ -46,7 +46,10 @@
         },
         created () {
             if(this.$route.params.nickname != null) this.name = this.$route.params.nickname;
-            this.id = localStorage.getItem("ppid");
+            this.id = sessionStorage.getItem("ppid");
+            for(let i = 0; i < this.$route.params.messages.length; i++){
+                this.msgList.push({flag: true, data: this.$route.params.messages[i].data});
+            }
             this.socket = this.$route.params.socket;
             this.socket.onmessage = this.getMessage;
             this.socket.onopen = this.open;

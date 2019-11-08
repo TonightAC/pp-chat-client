@@ -39,14 +39,20 @@
             return {
                 socket: null,
                 name: '未连接',
-                id: '',
+                fromId: '',
+                toId: '',
                 input: '',
                 msgList: []
             }
         },
         created () {
             if(this.$route.params.nickname != null) this.name = this.$route.params.nickname;
-            this.id = sessionStorage.getItem("ppid");
+            this.fromId = sessionStorage.getItem("ppid");
+            this.toId = this.$route.params.ppid;
+            let localMsgList = JSON.parse(sessionStorage.getItem(String(this.toId)));
+            if(localMsgList != null){
+                this.msgList = localMsgList;
+            }
             for(let i = 0; i < this.$route.params.messages.length; i++){
                 this.msgList.push({flag: true, data: this.$route.params.messages[i].data});
             }
@@ -57,6 +63,7 @@
             this.socket.onerror = this.error;
         },
         destroyed () {
+            sessionStorage.setItem(String(this.toId), JSON.stringify(this.msgList));
             this.socket.close();
         },
         methods: {
@@ -68,7 +75,7 @@
                         duration: 2000
                     })
                 } else {
-                    this.socket.send(JSON.stringify({from: this.id, to: this.$route.params.ppid, data: this.input}));
+                    this.socket.send(JSON.stringify({from: this.fromId, to: this.toId, data: this.input}));
                     this.msgList.push({flag: false, data: this.input});
                     this.input = '';
                     this.$nextTick(() => {

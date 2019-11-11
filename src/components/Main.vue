@@ -10,7 +10,7 @@
         <el-main class="el-main">
             <div v-if="switchFlag">
                 <div v-for="friend in friendList" :key="friend.index">
-                    <el-card @click.native="clickItem(friend.ppid, friend.nickname, friend.messages)"  style="border-top: 0; border-left: 0; border-right: 0; position: relative;" :body-style="{ padding: '20px' }" shadow="never" >
+                    <el-card @click.native="clickItem(friend)"  style="border-top: 0; border-left: 0; border-right: 0; position: relative;" :body-style="{ padding: '20px' }" shadow="never" >
                         <el-avatar style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%)" size="large" :src="circleUrl"></el-avatar>
                         <span style="margin-left: 50px">{{ friend.nickname }}</span>
                         <el-badge style="position: absolute; right: 10px" class="mark" :value="friend.messages.length" v-if="friend.messages.length !== 0"/>
@@ -47,6 +47,10 @@
             this.axios.get('/user/getFriends?uid=' + sessionStorage.getItem('uid') + '&ppid=' + sessionStorage.getItem('ppid')).then(res => {
                 if(res.data.code === '0000'){
                     this.socket = new WebSocket(this.path + sessionStorage.getItem('ppid'));
+                    this.socket.onmessage = this.getMessage;
+                    this.socket.onopen = this.open;
+                    this.socket.onclose = this.close;
+                    this.socket.onerror = this.error;
                     for (let i = 0; i < res.data.data.length; i++){
                         this.friendList.push({
                             uid: res.data.data[i].uid,
@@ -78,17 +82,33 @@
             openSetting () {
                 this.$router.push({ name: 'Setting' });
             },
-            clickItem (ppid, nickname, messages) {
+            clickItem (friend) {
                 // eslint-disable-next-line no-console
                 console.log('click');
-                this.$router.push({ name: 'Chat', params: { ppid: ppid, nickname: nickname, socket: this.socket, messages: messages} });
+                let messages = friend.messages;
+                // friend.messages.length = 0;
+                this.$router.push({ name: 'Chat', params: { ppid: friend.ppid, nickname: friend.nickname, socket: this.socket, messages: messages} });
             },
             switchFriends () {
                 this.switchFlag = true;
             },
             switchGroups () {
                 this.switchFlag = false;
-            }
+            },
+            getMessage (msg) {
+                let result = JSON.parse(msg.data);
+                for(let i = 0; i < this.friendList.length; i++){
+                    if(this.friendList[i].ppid === result.from){
+                        this.friendList[i].messages.push(result);
+                    }
+                }
+            },
+            open () {
+            },
+            close () {
+            },
+            error () {
+            },
         }
     }
 </script>

@@ -59,6 +59,7 @@
             for(let i = 0; i < this.friend.messages.length; i++){
                 this.msgList.push({flag: true, data: this.friend.messages[i].data});
             }
+            this.friend.messages.length = 0;
             this.socket.onmessage = this.getMessage;
             this.socket.onopen = this.open;
             this.socket.onclose = this.close;
@@ -88,11 +89,15 @@
             },
             getMessage (msg) {
                 let result = JSON.parse(msg.data);
-                this.msgList.push({flag: true, data: result.data});
-                this.$nextTick(() => {
-                    let container = this.$el.querySelector("#container");
-                    container.scrollTop = container.scrollHeight;
-                })
+                if(result.from === this.friend.ppid){
+                    this.msgList.push({flag: true, data: result.data});
+                    this.$nextTick(() => {
+                        let container = this.$el.querySelector("#container");
+                        container.scrollTop = container.scrollHeight;
+                    });
+                }else{
+                    this.$emit('newMessage', result);
+                }
             },
             open () {
             },
@@ -102,7 +107,6 @@
             },
             back () {
                 this.$emit('switchView', {chatShow: false, homeShow: true, settingShow: false});
-                // this.$router.push({name: 'Main'})
             }
         }
     }

@@ -35,9 +35,12 @@
     import { Toast } from 'mint-ui';
     export default {
         name: "Chat",
+        props: {
+            socket: Object,
+            friend: Object
+        },
         data () {
             return {
-                socket: null,
                 name: '未连接',
                 fromId: '',
                 toId: '',
@@ -46,17 +49,16 @@
             }
         },
         created () {
-            if(this.$route.params.nickname != null) this.name = this.$route.params.nickname;
+            if(this.friend.nickname != null) this.name = this.friend.nickname;
             this.fromId = sessionStorage.getItem("ppid");
-            this.toId = this.$route.params.ppid;
+            this.toId = this.friend.ppid;
             let localMsgList = JSON.parse(sessionStorage.getItem(String(this.toId)));
             if(localMsgList != null){
                 this.msgList = localMsgList;
             }
-            for(let i = 0; i < this.$route.params.messages.length; i++){
-                this.msgList.push({flag: true, data: this.$route.params.messages[i].data});
+            for(let i = 0; i < this.friend.messages.length; i++){
+                this.msgList.push({flag: true, data: this.friend.messages[i].data});
             }
-            this.socket = this.$route.params.socket;
             this.socket.onmessage = this.getMessage;
             this.socket.onopen = this.open;
             this.socket.onclose = this.close;
@@ -64,7 +66,7 @@
         },
         destroyed () {
             sessionStorage.setItem(String(this.toId), JSON.stringify(this.msgList));
-            this.socket.close();
+            // this.socket.close();
         },
         methods: {
             sendMessage () {
@@ -99,7 +101,8 @@
             error () {
             },
             back () {
-                this.$router.push({name: 'Main'})
+                this.$emit('switchView', {chatShow: false, homeShow: true, settingShow: false});
+                // this.$router.push({name: 'Main'})
             }
         }
     }

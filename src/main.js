@@ -12,7 +12,7 @@ Vue.use(ElementUI);
 Vue.use(Mint);
 Vue.use(VueAxios, axios);
 
-axios.defaults.baseURL = 'http://192.168.1.107:1979';
+axios.defaults.baseURL = 'http://localhost:1979';
 Vue.config.productionTip = false;
 
 new Vue({

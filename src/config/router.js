@@ -3,7 +3,6 @@ import Vue from 'vue';
 import Main from '../components/Main';
 import Login from '../components/Login';
 import SignUp from '../components/SignUp';
-import Chat from '../components/Chat';
 import Setting from '../components/Setting';
 
 Vue.use(VueRouter);
@@ -30,21 +29,9 @@ const router = new VueRouter({
             component: SignUp
         },
         {
-            path: '/chat',
-            name: 'Chat',
-            component: Chat,
-            meta: {
-                requireAuth: true
-            }
-
-        },
-        {
             path: '/setting',
             name: 'Setting',
-            component: Setting,
-            meta: {
-                requireAuth: true
-            }
+            component: Setting
         }
     ]
 });

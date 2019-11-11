@@ -11,7 +11,7 @@
             <div v-for="msg in msgList" :key="msg.index" style="margin-bottom: 5px">
                 <div style="text-align: left; position: relative" v-if="msg.flag">
                     <el-avatar size="large" src="https://empty" style="position: absolute; top: 3px; left: 0">
-                        <img src="http://localhost:1979/avatar/avatar1.png" alt="头像"/>
+                        <img src="../assets/avatar/avatar1.png" alt="avatar"/>
                     </el-avatar>
                     <el-card class="el-card" :body-style="{ padding: '12px' }" shadow="never" style="max-width: 75%; margin-left: 50px">
                         <span style="word-break: break-all; white-space: normal">{{ msg.data }}</span>
@@ -22,7 +22,7 @@
                         <span style="word-break: break-all; white-space: normal; color: white">{{ msg.data }}</span>
                     </el-card>
                     <el-avatar size="large" src="https://empty" style="position: absolute; top: 3px; right: 0">
-                        <img src="http://localhost:1979/avatar/avatar1.png" alt="头像"/>
+                        <img src="../assets/avatar/avatar1.png" alt="avatar"/>
                     </el-avatar>
                 </div>
             </div>
@@ -114,7 +114,7 @@
             error () {
             },
             back () {
-                this.$emit('switchView', {chatShow: false, homeShow: true, settingShow: false});
+                this.$emit('switchView', {chatShow: false, homeShow: true, addShow: false, settingShow: false});
             }
         }
     }

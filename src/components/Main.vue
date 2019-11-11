@@ -2,6 +2,7 @@
     <div>
         <Chat @switchView="switchView" @newMessage="newMessage" v-if="chatShow" :socket="this.socket" :friend="this.friend"></Chat>
         <Home @switchView="switchView" @setFriend="setFriend" v-if="homeShow" :socket="this.socket" :friend-list="this.friendList"></Home>
+        <Add @switchView="switchView" v-if="addShow"></Add>
         <Setting @switchView="switchView" v-if="settingShow"></Setting>
     </div>
 </template>
@@ -11,9 +12,10 @@
     import Home from "./Home";
     import Chat from "./Chat";
     import Setting from "./Setting";
+    import Add from "@/components/Add";
     export default {
         name: "Main",
-        components: {Setting, Chat, Home},
+        components: {Add, Setting, Chat, Home},
         data () {
             return {
                 path: 'ws://localhost:1979/websocket/',
@@ -22,6 +24,7 @@
                 socket: null,
                 chatShow: false,
                 homeShow: true,
+                addShow: false,
                 settingShow: false
             }
         },
@@ -58,6 +61,7 @@
             switchView (switchs) {
                 this.chatShow = switchs.chatShow;
                 this.homeShow = switchs.homeShow;
+                this.addShow = switchs.addShow;
                 this.settingShow = switchs.settingShow;
             },
             setFriend (friend) {

@@ -5,6 +5,7 @@
                 <el-menu-item index="1" @click="switchFriends"><el-badge is-dot hidden="true" class="item">我的好友</el-badge></el-menu-item>
                 <el-menu-item index="2" @click="switchGroups"><el-badge is-dot hidden="true"  class="item">我的群聊</el-badge></el-menu-item>
             </el-menu>
+            <i @click="openAdd" class="el-icon-plus" style="position: absolute; right: 60px; top: 50%; transform: translateY(-50%); font-size: 20px"></i>
             <i @click="openSetting" class="el-icon-setting" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 20px"></i>
         </el-header>
         <el-main class="el-main">
@@ -12,7 +13,7 @@
                 <div v-for="friend in friendList" :key="friend.index">
                     <el-card @click.native="clickItem(friend)"  style="border-top: 0; border-left: 0; border-right: 0; position: relative;" :body-style="{ padding: '20px' }" shadow="never" >
                         <el-avatar style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%)" size="large" src="https://empty">
-                            <img src="http://localhost:1979/avatar/avatar1.png" alt="头像"/>
+                            <img src="../assets/avatar/avatar1.png" alt="avatar"/>
                         </el-avatar>
                         <span style="margin-left: 50px">{{ friend.nickname }}</span>
                         <el-badge style="position: absolute; right: 10px" class="mark" :value="friend.messages.length" v-if="friend.messages.length !== 0"/>
@@ -54,14 +55,17 @@
         destroyed () {
         },
         methods: {
+            openAdd () {
+                this.$emit('switchView', {chatShow: false, homeShow: false, addShow: true, settingShow: false});
+            },
             openSetting () {
-                this.$emit('switchView', {chatShow: false, homeShow: false, settingShow: true});
+                this.$emit('switchView', {chatShow: false, homeShow: false, addShow: false, settingShow: true});
             },
             clickItem (friend) {
                 // eslint-disable-next-line no-console
                 console.log('click');
                 this.$emit('setFriend', { ppid: friend.ppid, nickname: friend.nickname, messages: friend.messages});
-                this.$emit('switchView', {chatShow: true, homeShow: false, settingShow: false});
+                this.$emit('switchView', {chatShow: true, homeShow: false, addShow: false, settingShow: false});
             },
             switchFriends () {
                 this.switchFlag = true;

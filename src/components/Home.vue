@@ -11,7 +11,7 @@
         <el-main class="el-main">
             <div v-if="switchFlag">
                 <div v-for="friend in friendList" :key="friend.index">
-                    <el-card @click.native="clickItem(friend)"  style="border-top: 0; border-left: 0; border-right: 0; position: relative;" :body-style="{ padding: '20px' }" shadow="never" >
+                    <el-card @click.native="clickItem(friend)"  style="border-top: 0; border-left: 0; border-right: 0; position: relative;" :body-style="{ padding: '20px' }" shadow="never">
                         <el-avatar style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%)" size="large" src="https://empty">
                             <img src="../assets/avatar/avatar1.png" alt="avatar"/>
                         </el-avatar>

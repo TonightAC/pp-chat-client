@@ -2,6 +2,7 @@
     <el-container class="el-container">
         <el-header class="el-header">
             <el-card style="width: 100%; height: 100%; border-radius: 0" shadow="never">
+                <el-badge :value="badgeValue" :hidden="badgeHidden"	style="padding: 0; position: absolute; z-index: 2; left: 40px; top: 53%; transform: translateY(-50%)"></el-badge>
                 <i @click="back" class="el-icon-arrow-left" style="position: absolute; top: 50%; transform: translateY(-50%); font-size: 20px"></i>
                 <div style="font-size: 16px; position: absolute; left: 50%; top: 50%; transform: translateX(-50%) translateY(-50%)">{{ name }}</div>
             </el-card>
@@ -9,7 +10,9 @@
         <el-main id="container" class="el-main">
             <div v-for="msg in msgList" :key="msg.index" style="margin-bottom: 5px">
                 <div style="text-align: left; position: relative" v-if="msg.flag">
-                    <el-avatar size="large" :src="circleUrl" style="position: absolute; top: 3px; left: 0"></el-avatar>
+                    <el-avatar size="large" src="https://empty" style="position: absolute; top: 3px; left: 0">
+                        <img src="http://localhost:1979/avatar/avatar1.png" alt="头像"/>
+                    </el-avatar>
                     <el-card class="el-card" :body-style="{ padding: '12px' }" shadow="never" style="max-width: 75%; margin-left: 50px">
                         <span style="word-break: break-all; white-space: normal">{{ msg.data }}</span>
                     </el-card>
@@ -18,7 +21,9 @@
                     <el-card class="el-card" :body-style="{ padding: '12px' }" shadow="never" style="max-width: 75%; background-color: #409EFF; margin-right: 50px">
                         <span style="word-break: break-all; white-space: normal; color: white">{{ msg.data }}</span>
                     </el-card>
-                    <el-avatar size="large" :src="circleUrl" style="position: absolute; top: 3px; right: 0"></el-avatar>
+                    <el-avatar size="large" src="https://empty" style="position: absolute; top: 3px; right: 0">
+                        <img src="http://localhost:1979/avatar/avatar1.png" alt="头像"/>
+                    </el-avatar>
                 </div>
             </div>
         </el-main>
@@ -41,6 +46,8 @@
         },
         data () {
             return {
+                badgeValue: 0,
+                badgeHidden: true,
                 name: '未连接',
                 fromId: '',
                 toId: '',
@@ -67,7 +74,6 @@
         },
         destroyed () {
             sessionStorage.setItem(String(this.toId), JSON.stringify(this.msgList));
-            // this.socket.close();
         },
         methods: {
             sendMessage () {
@@ -96,6 +102,8 @@
                         container.scrollTop = container.scrollHeight;
                     });
                 }else{
+                    this.badgeValue++;
+                    this.badgeHidden = false;
                     this.$emit('newMessage', result);
                 }
             },

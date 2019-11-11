@@ -11,7 +11,9 @@
             <div v-if="switchFlag">
                 <div v-for="friend in friendList" :key="friend.index">
                     <el-card @click.native="clickItem(friend)"  style="border-top: 0; border-left: 0; border-right: 0; position: relative;" :body-style="{ padding: '20px' }" shadow="never" >
-                        <el-avatar style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%)" size="large" :src="circleUrl"></el-avatar>
+                        <el-avatar style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%)" size="large" src="https://empty">
+                            <img src="http://localhost:1979/avatar/avatar1.png" alt="头像"/>
+                        </el-avatar>
                         <span style="margin-left: 50px">{{ friend.nickname }}</span>
                         <el-badge style="position: absolute; right: 10px" class="mark" :value="friend.messages.length" v-if="friend.messages.length !== 0"/>
                     </el-card>
@@ -92,6 +94,7 @@
         left: 0;
         right: 0;
         top: 0;
+        z-index: 2;
     }
     .el-main {
         position: absolute;

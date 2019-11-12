@@ -14,7 +14,7 @@
             </el-card>
         </el-header>
         <el-main class="el-main">
-            <div v-if="switchFlag">
+            <div>
                 <div v-for="friend in friendList" :key="friend.index">
                     <el-card @click.native="clickItem(friend)"  style="border-top: 0; border-left: 0; border-right: 0; position: relative;" :body-style="{ padding: '20px' }" shadow="never">
                         <el-avatar style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%)" size="large" src="https://empty">
@@ -25,14 +25,18 @@
                     </el-card>
                 </div>
             </div>
-            <div v-else>
-                <div v-for="group in groupList" :key="group.index">
-                    <el-card @click.native="clickItem(group.ppid, group.nickname)"  style="border-top: 0; border-left: 0; border-right: 0; position: relative;" :body-style="{ padding: '20px' }" shadow="never" >
-                        <el-avatar style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%)" size="large" :src="circleUrl"></el-avatar>
-                        <span style="margin-left: 50px">{{ group.nickname }}</span>
-                        <el-badge style="position: absolute; right: 10px" class="mark" :value="3" />
-                    </el-card>
+            <div v-if="this.friendList.length === 0">
+                <div style="position: absolute; left: 50%; top: 50%; transform: translateX(-50%) translateY(-50%); text-align: center">
+                    <img src="../assets/box.png" style="width: 50px; height: 50px" alt="pp-logo"/>
+                    <div style="font-size: 12px">您还没有好友</div>
                 </div>
+<!--                <div v-for="group in groupList" :key="group.index">-->
+<!--                    <el-card @click.native="clickItem(group.ppid, group.nickname)"  style="border-top: 0; border-left: 0; border-right: 0; position: relative;" :body-style="{ padding: '20px' }" shadow="never" >-->
+<!--                        <el-avatar style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%)" size="large" :src="circleUrl"></el-avatar>-->
+<!--                        <span style="margin-left: 50px">{{ group.nickname }}</span>-->
+<!--                        <el-badge style="position: absolute; right: 10px" class="mark" :value="3" />-->
+<!--                    </el-card>-->
+<!--                </div>-->
             </div>
         </el-main>
     </el-container>

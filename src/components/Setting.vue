@@ -20,6 +20,18 @@
                         <div style="margin-left: 15px">修改头像</div>
                     </template>
                     <div>
+                        <el-row>
+                            <el-col :span="6"><el-image style="width: 100px; height: 100px" :src="url" :fit="fit"></el-image></el-col>
+                            <el-col :span="6"><el-image style="width: 100px; height: 100px" :src="url" :fit="fit"></el-image></el-col>
+                            <el-col :span="6"><el-image style="width: 100px; height: 100px" :src="url" :fit="fit"></el-image></el-col>
+                            <el-col :span="6"><el-image style="width: 100px; height: 100px" :src="url" :fit="fit"></el-image></el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="6"><el-image style="width: 100px; height: 100px" :src="url" :fit="fit"></el-image></el-col>
+                            <el-col :span="6"><el-image style="width: 100px; height: 100px" :src="url" :fit="fit"></el-image></el-col>
+                            <el-col :span="6"><el-image style="width: 100px; height: 100px" :src="url" :fit="fit"></el-image></el-col>
+                            <el-col :span="6"><el-image style="width: 100px; height: 100px" :src="url" :fit="fit"></el-image></el-col>
+                        </el-row>
                     </div>
                 </el-collapse-item>
                 <el-collapse-item name="2">

@@ -9,10 +9,16 @@
         <el-main class="el-main">
             <el-row>
                 <el-col style="padding-right: 3px" :span="18"><el-input v-model="searchString" placeholder="PP号/昵称"></el-input></el-col>
-                <el-col style="padding-left: 3px" :span="6"><el-button style="width: 100%;" @click="search" type="primary">搜索</el-button></el-col>
+                <el-col style="padding-left: 3px" :span="6"><el-button v-loading="loading" style="width: 100%;" @click="search" type="primary">搜索</el-button></el-col>
             </el-row>
-            <el-card v-loading="loading" style="position: absolute; bottom: 10px; left: 10px; right: 10px; top: 0; margin-top: 60px" shadow="never">
-            </el-card>
+            <div v-for="item in searchList" :key="item.index">
+                <el-card style="border-top: 0; border-left: 0; border-right: 0; position: relative;" :body-style="{ padding: '20px' }" shadow="never">
+                    <el-avatar style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%)" size="large" src="https://empty">
+                        <img src="../assets/avatar/avatar1.png" alt="avatar"/>
+                    </el-avatar>
+                    <span style="margin-left: 50px">{{ item.nickname }}</span>
+                </el-card>
+            </div>
         </el-main>
     </el-container>
 </template>
@@ -24,39 +30,74 @@
         data () {
             return {
                 searchString: '',
-                loading: false
+                loading: false,
+                searchList: []
             }
+        },
+        created () {
+            // this.searchList.push({nickname: '123'});
+            // this.searchList.push({nickname: '123'});
+            // this.searchList.push({nickname: '123'});
+            // this.searchList.push({nickname: '123'});
+            // this.searchList.push({nickname: '123'});
+            // this.searchList.push({nickname: '123'});
+            // this.searchList.push({nickname: '123'});
+            // this.searchList.push({nickname: '123'});
+            // this.searchList.push({nickname: '123'});
+            // this.searchList.push({nickname: '123'});
+            // this.searchList.push({nickname: '123'});
+            // this.searchList.push({nickname: '123'});
+            // this.searchList.push({nickname: '123'});
+            // this.searchList.push({nickname: '123'});
+            // this.searchList.push({nickname: '123'});
+            // this.searchList.push({nickname: '123'});
         },
         methods: {
             search () {
-                this.loading = true;
-                this.axios.get('/user/search?searchString=' + this.searchString).then(res => {
-                    this.loading = false;
-                    if(res.data.code === '0000'){
-                        if(res.data.data.length === 0){
+                if(this.searchString.length !== 0){
+                    this.loading = true;
+                    this.axios.get('/user/search?searchString=' + this.searchString).then(res => {
+                        this.loading = false;
+                        if(res.data.code === '0000'){
+                            if(res.data.data.length !== 0){
+                                for (let i = 0; i < res.data.data.length; i++){
+                                    this.searchList.push({
+                                        uid: res.data.data[i].uid,
+                                        ppid: res.data.data[i].ppid,
+                                        nickname: res.data.data[i].nickname
+                                    });
+                                }
+                            }else {
+                                Toast({
+                                    message: '查无结果',
+                                    position: 'bottom',
+                                    duration: 2000
+                                });
+                            }
+                        } else {
                             Toast({
-                                message: '查无结果',
+                                message: '查询失败',
                                 position: 'bottom',
                                 duration: 2000
                             });
                         }
-                    } else {
+                    }).catch(error => {
+                        this.loading = false;
                         Toast({
-                            message: '查询失败',
+                            message: '网络异常',
                             position: 'bottom',
                             duration: 2000
                         });
-                    }
-                }).catch(error => {
-                    this.loading = false;
+                        // eslint-disable-next-line no-console
+                        console.log(error);
+                    });
+                }else{
                     Toast({
-                        message: '网络异常',
+                        message: '搜索不能为空',
                         position: 'bottom',
                         duration: 2000
                     });
-                    // eslint-disable-next-line no-console
-                    console.log(error);
-                })
+                }
             },
             back () {
                 this.$emit('switchView', {chatShow: false, homeShow: true, addShow: false, settingShow: false});

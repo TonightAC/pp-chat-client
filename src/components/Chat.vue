@@ -59,7 +59,7 @@
             if(this.friend.nickname != null) this.name = this.friend.nickname;
             this.fromId = sessionStorage.getItem("ppid");
             this.toId = this.friend.ppid;
-            let localMsgList = JSON.parse(sessionStorage.getItem(String(this.toId)));
+            let localMsgList = JSON.parse(localStorage.getItem(String(this.fromId) + '_' + String(this.toId)));
             if(localMsgList != null){
                 this.msgList = localMsgList;
             }
@@ -73,7 +73,7 @@
             this.socket.onerror = this.error;
         },
         destroyed () {
-            sessionStorage.setItem(String(this.toId), JSON.stringify(this.msgList));
+            localStorage.setItem(String(this.fromId) + '_' + String(this.toId), JSON.stringify(this.msgList));
         },
         methods: {
             sendMessage () {

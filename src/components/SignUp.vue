@@ -10,7 +10,7 @@
                 <el-button style="width: 200px" @click="signUp" type="primary" plain>注册</el-button>
             </div>
         </div>
-        <el-dialog :visible.sync="dialogVisible" width="60%">
+        <el-dialog :visible.sync="dialogVisible" width="75%">
             <h4>请记住您的PP号码，</h4>
             <h4>下次登录时使用。</h4>
             <h2 style="text-align: center; padding-top: 20px">{{ this.ppid }}</h2>
@@ -36,6 +36,7 @@
         methods: {
             confirmPpid () {
                 this.dialogVisible = false;
+                sessionStorage.setItem('token', 'true');
                 this.$router.push({ name : 'Main' });
             },
             signUp () {

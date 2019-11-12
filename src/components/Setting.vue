@@ -26,13 +26,19 @@
                     <template slot="title">
                         <div style="margin-left: 15px">修改昵称</div>
                     </template>
-                    <el-input v-model="modifyNickname" placeholder="请输入修改昵称"></el-input>
-                    <el-button type="primary" style="width: 100%" plain>修改</el-button>
+                    <div style="padding: 0 10px 0 10px">
+                        <el-input v-model="modifyNickname" placeholder="请输入修改昵称"></el-input>
+                        <el-button type="primary" style="width: 100%; margin-top: 5px" plain>修改</el-button>
+                    </div>
                 </el-collapse-item>
                 <el-collapse-item name="3">
                     <template slot="title">
                         <div style="margin-left: 15px">修改密码</div>
                     </template>
+                    <div style="padding: 0 10px 0 10px">
+                        <el-input v-model="modifyPwd" placeholder="请输入修改密码" show-password></el-input>
+                        <el-button type="primary" style="width: 100%; margin-top: 5px" plain>修改</el-button>
+                    </div>
                 </el-collapse-item>
             </el-collapse>
         </el-main>
@@ -49,7 +55,8 @@
             return {
                 ppid: '',
                 nickname: '',
-                modifyNickname: ''
+                modifyNickname: '',
+                modifyPwd: ''
             }
         },
         created () {

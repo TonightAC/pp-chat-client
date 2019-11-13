@@ -4,6 +4,7 @@
             <el-card style="width: 100%; height: 100%; border-radius: 0" :body-style="{ padding: '10px' }" shadow="never">
                 <i @click="back" class="el-icon-arrow-left" style="position: absolute; top: 50%; transform: translateY(-50%); font-size: 20px"></i>
                 <div style="font-size: 16px; position: absolute; left: 50%; top: 50%; transform: translateX(-50%) translateY(-50%)">添加</div>
+                <el-badge :hidden="!hasAdd" style="font-size: 16px; position: absolute; right: 0; top: 50%; transform: translateX(-50%) translateY(-50%)" is-dot>新朋友</el-badge>
             </el-card>
         </el-header>
         <el-main class="el-main">
@@ -12,7 +13,7 @@
                 <el-col style="padding-left: 3px" :span="6"><el-button style="width: 100%;" @click="search" type="primary">搜索</el-button></el-col>
             </el-row>
             <div v-for="item in searchList" :key="item.index">
-                <el-card style="border-top: 0; border-left: 0; border-right: 0; position: relative;" :body-style="{ padding: '20px' }" shadow="never">
+                <el-card class="item" :body-style="{ padding: '20px' }" shadow="never">
                     <el-avatar style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%)" size="large" src="https://empty">
                         <img src="../assets/avatar/avatar1.png" alt="avatar"/>
                     </el-avatar>
@@ -37,6 +38,9 @@
     import { Toast } from 'mint-ui';
     export default {
         name: "Add",
+        props: {
+            hasAdd: Boolean
+        },
         data () {
             return {
                 verifyMessage: '',
@@ -93,11 +97,12 @@
             },
             add () {
                 this.dialogVisible = false;
-                this.axios.post('/user/add?ppid=' + this.item.ppid + '&uid1=' + this.item.uid + '&uid2=' + sessionStorage.getItem('uid') + '&verifyMessage=' + this.verifyMessage).then(res => {
+                this.axios.post('/relation/wantAdd?ppid=' + this.item.ppid + '&uid1=' + this.item.uid + '&uid2=' + sessionStorage.getItem('uid') + '&verifyMessage=' + this.verifyMessage).then(res => {
                     this.searchList.length = 0;
                     if(res.data.code === '0000'){
+                        this.verifyMessage = '';
                         Toast({
-                            message: '添加成功，等待对方确认',
+                            message: '已发送，等待对方确认',
                             position: 'bottom',
                             duration: 2000
                         });
@@ -145,5 +150,14 @@
         top: 0;
         bottom: 0;
         padding: 10px;
+    }
+    .item {
+        border-top: 0;
+        border-left: 0;
+        border-right: 0;
+        position: relative;
+    }
+    .item-last {
+        border-bottom: 0;
     }
 </style>

@@ -1,8 +1,8 @@
 <template>
     <div>
         <Chat @switchView="switchView" @newMessage="newMessage" v-if="chatShow" :socket="this.socket" :friend="this.friend"></Chat>
-        <Home @switchView="switchView" @setFriend="setFriend" v-if="homeShow" :socket="this.socket" :friend-list="this.friendList"></Home>
-        <Add @switchView="switchView" v-if="addShow"></Add>
+        <Home @switchView="switchView" @setFriend="setFriend" v-if="homeShow" :hasAdd="this.hasAdd" :socket="this.socket" :friend-list="this.friendList"></Home>
+        <Add @switchView="switchView" v-if="addShow" :hasAdd="this.hasAdd" :friend-list="this.friendList"></Add>
         <Setting @switchView="switchView" v-if="settingShow"></Setting>
     </div>
 </template>
@@ -22,6 +22,7 @@
                 friendList: [],
                 friend: null,
                 socket: null,
+                hasAdd: false,
                 chatShow: false,
                 homeShow: true,
                 addShow: false,
@@ -43,6 +44,25 @@
                 } else {
                     Toast({
                         message: '好友查询失败',
+                        position: 'bottom',
+                        duration: 2000
+                    });
+                }
+            }).catch(error => {
+                Toast({
+                    message: '网络异常',
+                    position: 'bottom',
+                    duration: 2000
+                });
+                // eslint-disable-next-line no-console
+                console.log(error);
+            });
+            this.axios.get('/relation/hasAdd?ppid=' + sessionStorage.getItem('ppid')).then(res => {
+                if(res.data.code === '0000'){
+                    this.hasAdd = String(res.data.data) === 'true';
+                } else {
+                    Toast({
+                        message: '添加信息查询失败',
                         position: 'bottom',
                         duration: 2000
                     });

@@ -33,14 +33,15 @@
             this.axios.get('/user/getFriends?uid=' + sessionStorage.getItem('uid') + '&ppid=' + sessionStorage.getItem('ppid')).then(res => {
                 if(res.data.code === '0000'){
                     this.socket = new WebSocket(this.path + sessionStorage.getItem('ppid'));
-                    for (let i = 0; i < res.data.data.length; i++){
-                        this.friendList.push({
-                            uid: res.data.data[i].uid,
-                            ppid: res.data.data[i].ppid,
-                            nickname: res.data.data[i].nickname,
-                            messages: res.data.data[i].messages
-                        });
-                    }
+                    this.friendList = res.data.data;
+                    // for (let i = 0; i < res.data.data.length; i++){
+                    //     this.friendList.push({
+                    //         uid: res.data.data[i].uid,
+                    //         ppid: res.data.data[i].ppid,
+                    //         nickname: res.data.data[i].nickname,
+                    //         messages: res.data.data[i].messages
+                    //     });
+                    // }
                 } else {
                     Toast({
                         message: '好友查询失败',

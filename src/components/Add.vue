@@ -171,7 +171,11 @@
                 this.item = item;
             },
             back () {
-                this.$emit('switchView', {chatShow: false, homeShow: true, addShow: false, settingShow: false});
+                if(this.confirmView){
+                    this.confirmView = false;
+                }else{
+                    this.$emit('switchView', {chatShow: false, homeShow: true, addShow: false, settingShow: false});
+                }
             }
         }
     }

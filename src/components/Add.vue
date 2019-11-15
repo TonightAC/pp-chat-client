@@ -5,8 +5,8 @@
                 <el-card style="width: 100%; height: 100%; border-radius: 0" :body-style="{ padding: '10px' }" shadow="never">
                     <i @click="back" class="el-icon-arrow-left" style="position: absolute; top: 50%; transform: translateY(-50%); font-size: 20px"></i>
                     <div style="font-size: 16px; position: absolute; left: 50%; top: 50%; transform: translateX(-50%) translateY(-50%)">添加</div>
-                    <el-badge v-if="!confirmView" :hidden="!hasAdd" style="font-size: 16px; position: absolute; right: 0; top: 50%; transform: translateX(-50%) translateY(-50%)" is-dot>
-                        <div @click="toConfirm" style="font-size: 15px">新朋友</div>
+                    <el-badge v-if="!confirmView" :hidden="!hasAdd" style="font-size: 16px; position: absolute; right: 0; top: 50%; transform: translateX(-15px) translateY(-50%)" is-dot>
+                        <div @click="toConfirm" style="font-size: 15px; padding-right: 5px">新朋友</div>
                     </el-badge>
                 </el-card>
             </el-header>
@@ -18,7 +18,7 @@
                         </el-avatar>
                         <div style="margin-left: 45px">{{ item.nickname }}</div>
                         <div style="margin-left: 45px; font-size: 12px">验证信息：{{ item.verifyString }}</div>
-                        <el-button @click="confirm(item)" type="primary" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 15px" icon="el-icon-check" circle plain :disabled="String(item.ppid2) === ''"></el-button>
+                        <el-button @click="confirm(item)" type="primary" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 15px" icon="el-icon-check" circle plain></el-button>
                         <el-button @click="dismiss(item)" type="danger" style="position: absolute; right: 70px; top: 50%; transform: translateY(-50%); font-size: 15px" icon="el-icon-close" circle plain></el-button>
                     </el-card>
                 </div>
@@ -69,80 +69,6 @@
                 dialogVisible: false
             }
         },
-        // created () {
-        //     this.confirmList.push({
-        //         ppid1: '1',
-        //         ppid2: '2',
-        //         uid1: '1',
-        //         uid2: '2',
-        //         nickname: 'test',
-        //         verifyString: '123'
-        //     });
-        //     this.confirmList.push({
-        //         ppid1: '1',
-        //         ppid2: '2',
-        //         uid1: '1',
-        //         uid2: '2',
-        //         nickname: 'test',
-        //         verifyString: '123'
-        //     });
-        //     this.confirmList.push({
-        //         ppid1: '1',
-        //         ppid2: '2',
-        //         uid1: '1',
-        //         uid2: '2',
-        //         nickname: 'test',
-        //         verifyString: '123'
-        //     });
-        //     this.confirmList.push({
-        //         ppid1: '1',
-        //         ppid2: '2',
-        //         uid1: '1',
-        //         uid2: '2',
-        //         nickname: 'test',
-        //         verifyString: '123'
-        //     });
-        //     this.confirmList.push({
-        //         ppid1: '1',
-        //         ppid2: '2',
-        //         uid1: '1',
-        //         uid2: '2',
-        //         nickname: 'test',
-        //         verifyString: '123'
-        //     });
-        //     this.confirmList.push({
-        //         ppid1: '1',
-        //         ppid2: '2',
-        //         uid1: '1',
-        //         uid2: '2',
-        //         nickname: 'test',
-        //         verifyString: '123'
-        //     });
-        //     this.confirmList.push({
-        //         ppid1: '1',
-        //         ppid2: '2',
-        //         uid1: '1',
-        //         uid2: '2',
-        //         nickname: 'test',
-        //         verifyString: '123'
-        //     });
-        //     this.confirmList.push({
-        //         ppid1: '1',
-        //         ppid2: '2',
-        //         uid1: '1',
-        //         uid2: '2',
-        //         nickname: 'test',
-        //         verifyString: '123'
-        //     });
-        //     this.confirmList.push({
-        //         ppid1: '1',
-        //         ppid2: '2',
-        //         uid1: '1',
-        //         uid2: '2',
-        //         nickname: 'test',
-        //         verifyString: '123'
-        //     });
-        // },
         methods: {
             search () {
                 if(this.searchString.length !== 0){
@@ -217,11 +143,18 @@
                 });
             },
             toConfirm () {
+                let s = sessionStorage.getItem('ppid') + '_add';
+                let localConfirmList = JSON.parse(localStorage.getItem(s));
+                if(localConfirmList != null){
+                    this.confirmList = localConfirmList;
+                }
                 if(this.hasAdd){
                     this.confirmView = true;
                     this.axios.get('/relation/getAdds?ppid=' + sessionStorage.getItem('ppid')).then(res => {
                         if(res.data.code === '0000'){
-                            this.confirmList = res.data.data;
+                            for(let i = 0; i < res.data.data.length; i++){
+                                this.confirmList.push(res.data.data[i]);
+                            }
                         } else {
                             Toast({
                                 message: '查询失败',
@@ -249,14 +182,13 @@
             confirm (item) {
                 this.axios.post('/relation/newRelation?uid1=' + item.uid1 + '&uid2=' + item.uid2).then(res => {
                     if(res.data.code === '0000'){
-                        item.ppid2 = '';
+                        this.confirmList.splice(item.index, 1);
                         Toast({
                             message: '添加成功',
                             position: 'bottom',
                             duration: 2000
                         });
                     } else {
-                        this.confirmList.splice(item.index, 1);
                         Toast({
                             message: '添加失败',
                             position: 'bottom',
@@ -287,6 +219,11 @@
             },
             back () {
                 if(this.confirmView){
+                    if(this.confirmList.length === 0){
+                        this.$emit('hasLookedAdd', false);
+                    }
+                    let s = sessionStorage.getItem('ppid') + '_add';
+                    localStorage.setItem(s, JSON.stringify(this.confirmList));
                     this.confirmView = false;
                 }else{
                     this.$emit('switchView', {chatShow: false, homeShow: true, addShow: false, settingShow: false});

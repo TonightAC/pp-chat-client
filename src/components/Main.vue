@@ -2,7 +2,7 @@
     <div>
         <Chat @switchView="switchView" @newMessage="newMessage" v-if="chatShow" :socket="this.socket" :friend="this.friend"></Chat>
         <Home @switchView="switchView" @setFriend="setFriend" v-if="homeShow" :hasAdd="this.hasAdd" :socket="this.socket" :friend-list="this.friendList"></Home>
-        <Add @switchView="switchView" v-if="addShow" :hasAdd="this.hasAdd" :friend-list="this.friendList"></Add>
+        <Add @hasLookedAdd="hasLookedAdd" @switchView="switchView" v-if="addShow" :hasAdd="this.hasAdd" :friend-list="this.friendList"></Add>
         <Setting @switchView="switchView" v-if="settingShow"></Setting>
     </div>
 </template>
@@ -18,7 +18,7 @@
         components: {Add, Setting, Chat, Home},
         data () {
             return {
-                path: 'ws://localhost:1979/websocket/',
+                path: 'ws://192.168.1.102:1979/websocket/',
                 friendList: [],
                 friend: null,
                 socket: null,
@@ -52,6 +52,11 @@
             });
             this.axios.get('/relation/hasAdd?ppid=' + sessionStorage.getItem('ppid')).then(res => {
                 if(res.data.code === '0000'){
+                //     let s = sessionStorage.getItem('ppid') + '_add';
+                // || localStorage.getItem(s) !== undefined
+                //     if(String(res.data.data) === 'true'){
+                //         this.hasAdd = true;
+                //     }
                     this.hasAdd = String(res.data.data) === 'true';
                 } else {
                     Toast({
@@ -87,6 +92,9 @@
                         break;
                     }
                 }
+            },
+            hasLookedAdd (flag) {
+                this.hasAdd = flag;
             }
         }
     }

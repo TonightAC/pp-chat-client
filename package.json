@@ -12,6 +12,7 @@
     "element-ui": "^2.12.0",
     "good-storage": "^1.1.0",
     "mint-ui": "^2.2.13",
+    "qs": "^6.9.1",
     "vue": "^2.6.10",
     "vue-axios": "^2.1.5",
     "vue-print-nb": "^1.4.0",

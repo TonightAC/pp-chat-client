@@ -162,7 +162,7 @@
                     '&nickname2=' + item.nickname2).then(res => {
                     if(res.data.code === '0000'){
                         this.confirmList.splice(item.index, 1);
-                        this.$emit('addToFriendList', item);
+                        this.$emit('addToFriendList', {uid: item.uid1, ppid: item.ppid1, nickname: item.nickname1});
                         Toast({
                             message: '添加成功',
                             position: 'bottom',

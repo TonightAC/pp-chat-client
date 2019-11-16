@@ -12,13 +12,13 @@
     import Home from "./Home";
     import Chat from "./Chat";
     import Setting from "./Setting";
-    import Add from "@/components/Add";
+    import Add from "./Add";
     export default {
         name: "Main",
         components: {Add, Setting, Chat, Home},
         data () {
             return {
-                path: 'ws://192.168.1.102:1979/websocket/',
+                path: 'ws://localhost:1979/websocket/',
                 confirmList: [],
                 friendList: [],
                 friend: null,
@@ -95,11 +95,11 @@
             hasLookedAdd (flag) {
                 this.hasAdd = flag;
             },
-            addToFriendList (item) {
+            addToFriendList (friend) {
                 this.friendList.push({
-                    uid: Number(item.uid1),
-                    ppid: String(item.ppid1),
-                    nickname: String(item.nickname1),
+                    uid: Number(friend.uid),
+                    ppid: String(friend.ppid),
+                    nickname: String(friend.nickname),
                     messages: []
                 });
             }

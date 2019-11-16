@@ -52,11 +52,6 @@
             });
             this.axios.get('/relation/hasAdd?ppid=' + sessionStorage.getItem('ppid')).then(res => {
                 if(res.data.code === '0000'){
-                //     let s = sessionStorage.getItem('ppid') + '_add';
-                // || localStorage.getItem(s) !== undefined
-                //     if(String(res.data.data) === 'true'){
-                //         this.hasAdd = true;
-                //     }
                     this.hasAdd = String(res.data.data) === 'true';
                 } else {
                     Toast({

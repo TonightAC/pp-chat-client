@@ -98,8 +98,8 @@
             addToFriendList (item) {
                 this.friendList.push({
                     uid: Number(item.uid1),
-                    ppid: item.ppid1,
-                    nickname: item.nickname,
+                    ppid: String(item.ppid1),
+                    nickname: String(item.nickname1),
                     messages: []
                 });
             }

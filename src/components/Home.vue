@@ -65,8 +65,8 @@
             },
             getMessage (msg) {
                 let result = JSON.parse(msg.data);
-                if(String(result.from) === 'sys_newFriend'){
-                    this.$emit('addToFriendList', JSON.parse(result.data));
+                if(result.data === undefined){
+                    this.$emit('addToFriendList', result);
                 }else{
                     for(let i = 0; i < this.friendList.length; i++){
                         if(this.friendList[i].ppid === result.from){

@@ -57,7 +57,8 @@
         name: "Add",
         props: {
             hasAdd: Boolean,
-            confirmList: Array
+            confirmList: Array,
+            socket: Object
         },
         data () {
             return {
@@ -69,7 +70,27 @@
                 dialogVisible: false
             }
         },
+        created () {
+            this.socket.onmessage = this.getMessage;
+            this.socket.onopen = this.open;
+            this.socket.onclose = this.close;
+            this.socket.onerror = this.error;
+        },
         methods: {
+            getMessage (msg) {
+                let result = JSON.parse(msg.data);
+                if(result.ppid !== undefined){
+                    this.$emit('addToFriendList', result);
+                }else if(result.verifyString !== undefined){
+                    this.$emit('addToConfirmList', result);
+                }
+            },
+            open () {
+            },
+            close () {
+            },
+            error () {
+            },
             search () {
                 if(this.searchString.length !== 0){
                     this.axios.get('/user/search?searchString=' + this.searchString).then(res => {

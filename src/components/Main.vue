@@ -2,7 +2,7 @@
     <div>
         <Chat @addToFriendList="addToFriendList" @switchView="switchView" @newMessage="newMessage" v-if="chatShow" :socket="this.socket" :friend="this.friend"></Chat>
         <Home @addToFriendList="addToFriendList" @switchView="switchView" @setFriend="setFriend" v-if="homeShow" :hasAdd="this.hasAdd" :socket="this.socket" :friend-list="this.friendList"></Home>
-        <Add @addToFriendList="addToFriendList" @hasLookedAdd="hasLookedAdd" @switchView="switchView" v-if="addShow" :hasAdd="this.hasAdd" :friend-list="this.friendList" :confirm-list="this.confirmList"></Add>
+        <Add @addToFriendList="addToFriendList" @hasLookedAdd="hasLookedAdd" @switchView="switchView" v-if="addShow" :hasAdd="this.hasAdd" :socket="this.socket" :friend-list="this.friendList" :confirm-list="this.confirmList"></Add>
         <Setting @switchView="switchView" v-if="settingShow"></Setting>
     </div>
 </template>

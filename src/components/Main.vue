@@ -1,8 +1,8 @@
 <template>
     <div>
-        <Chat @switchView="switchView" @newMessage="newMessage" v-if="chatShow" :socket="this.socket" :friend="this.friend"></Chat>
-        <Home @switchView="switchView" @setFriend="setFriend" v-if="homeShow" :hasAdd="this.hasAdd" :socket="this.socket" :friend-list="this.friendList"></Home>
-        <Add @hasLookedAdd="hasLookedAdd" @switchView="switchView" v-if="addShow" :hasAdd="this.hasAdd" :friend-list="this.friendList"></Add>
+        <Chat @addToFriendList="addToFriendList" @switchView="switchView" @newMessage="newMessage" v-if="chatShow" :socket="this.socket" :friend="this.friend"></Chat>
+        <Home @addToFriendList="addToFriendList" @switchView="switchView" @setFriend="setFriend" v-if="homeShow" :hasAdd="this.hasAdd" :socket="this.socket" :friend-list="this.friendList"></Home>
+        <Add @addToFriendList="addToFriendList" @hasLookedAdd="hasLookedAdd" @switchView="switchView" v-if="addShow" :hasAdd="this.hasAdd" :friend-list="this.friendList" :confirm-list="this.confirmList"></Add>
         <Setting @switchView="switchView" v-if="settingShow"></Setting>
     </div>
 </template>
@@ -19,6 +19,7 @@
         data () {
             return {
                 path: 'ws://192.168.1.102:1979/websocket/',
+                confirmList: [],
                 friendList: [],
                 friend: null,
                 socket: null,
@@ -50,12 +51,15 @@
                 // eslint-disable-next-line no-console
                 console.log(error);
             });
-            this.axios.get('/relation/hasAdd?ppid=' + sessionStorage.getItem('ppid')).then(res => {
+            this.axios.get('/relation/getAdds?ppid=' + sessionStorage.getItem('ppid')).then(res => {
                 if(res.data.code === '0000'){
-                    this.hasAdd = String(res.data.data) === 'true';
+                    for(let i = 0; i < res.data.data.length; i++){
+                        this.confirmList.push(res.data.data[i]);
+                    }
+                    this.hasAdd = !(this.confirmList.length === 0);
                 } else {
                     Toast({
-                        message: '添加信息查询失败',
+                        message: '查询失败',
                         position: 'bottom',
                         duration: 2000
                     });
@@ -90,6 +94,14 @@
             },
             hasLookedAdd (flag) {
                 this.hasAdd = flag;
+            },
+            addToFriendList (item) {
+                this.friendList.push({
+                    uid: Number(item.uid1),
+                    ppid: item.ppid1,
+                    nickname: item.nickname,
+                    messages: []
+                });
             }
         }
     }

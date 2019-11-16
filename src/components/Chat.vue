@@ -66,6 +66,10 @@
             for(let i = 0; i < this.friend.messages.length; i++){
                 this.msgList.push({flag: true, data: this.friend.messages[i].data});
             }
+            this.$nextTick(() => {
+                let container = this.$el.querySelector("#container");
+                container.scrollTop = container.scrollHeight;
+            });
             this.friend.messages.length = 0;
             this.socket.onmessage = this.getMessage;
             this.socket.onopen = this.open;
@@ -95,16 +99,20 @@
             },
             getMessage (msg) {
                 let result = JSON.parse(msg.data);
-                if(result.from === this.friend.ppid){
-                    this.msgList.push({flag: true, data: result.data});
-                    this.$nextTick(() => {
-                        let container = this.$el.querySelector("#container");
-                        container.scrollTop = container.scrollHeight;
-                    });
+                if(result.from === 'sys_addFriend'){
+                    this.$emit('addToFriendList', JSON.parse(result.data));
                 }else{
-                    this.badgeValue++;
-                    this.badgeHidden = false;
-                    this.$emit('newMessage', result);
+                    if(result.from === this.friend.ppid){
+                        this.msgList.push({flag: true, data: result.data});
+                        this.$nextTick(() => {
+                            let container = this.$el.querySelector("#container");
+                            container.scrollTop = container.scrollHeight;
+                        });
+                    }else{
+                        this.badgeValue++;
+                        this.badgeHidden = false;
+                        this.$emit('newMessage', result);
+                    }
                 }
             },
             open () {

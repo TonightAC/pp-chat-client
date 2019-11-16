@@ -65,9 +65,13 @@
             },
             getMessage (msg) {
                 let result = JSON.parse(msg.data);
-                for(let i = 0; i < this.friendList.length; i++){
-                    if(this.friendList[i].ppid === result.from){
-                        this.friendList[i].messages.push(result);
+                if(result.from === 'sys_addFriend'){
+                    this.$emit('addToFriendList', JSON.parse(result.data));
+                }else{
+                    for(let i = 0; i < this.friendList.length; i++){
+                        if(this.friendList[i].ppid === result.from){
+                            this.friendList[i].messages.push(result);
+                        }
                     }
                 }
             },

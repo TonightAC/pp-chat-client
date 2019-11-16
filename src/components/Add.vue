@@ -16,7 +16,7 @@
                         <el-avatar style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%)" size="large" src="https://empty">
                             <img src="../assets/avatar/avatar1.png" alt="avatar"/>
                         </el-avatar>
-                        <div style="margin-left: 45px">{{ item.nickname }}</div>
+                        <div style="margin-left: 45px">{{ item.nickname1 }}</div>
                         <div style="margin-left: 45px; font-size: 12px">验证信息：{{ item.verifyString }}</div>
                         <el-button @click="confirm(item)" type="primary" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 15px" icon="el-icon-check" circle plain></el-button>
                         <el-button @click="dismiss(item)" type="danger" style="position: absolute; right: 70px; top: 50%; transform: translateY(-50%); font-size: 15px" icon="el-icon-close" circle plain></el-button>
@@ -56,7 +56,8 @@
     export default {
         name: "Add",
         props: {
-            hasAdd: Boolean
+            hasAdd: Boolean,
+            confirmList: Array
         },
         data () {
             return {
@@ -65,7 +66,6 @@
                 searchString: '',
                 item: null,
                 searchList: [],
-                confirmList: [],
                 dialogVisible: false
             }
         },
@@ -115,7 +115,8 @@
                         '&ppid2=' + this.item.ppid +
                         '&uid1=' + sessionStorage.getItem('uid') +
                         '&uid2=' + this.item.uid +
-                        '&nickname=' + this.item.nickname +
+                        '&nickname1=' + sessionStorage.getItem('nickname') +
+                        '&nickname2=' + this.item.nickname +
                         '&verifyString=' + this.verifyString
                 ).then(res => {
                     this.verifyString = '';
@@ -143,34 +144,8 @@
                 });
             },
             toConfirm () {
-                let s = sessionStorage.getItem('ppid') + '_add';
-                let localConfirmList = JSON.parse(localStorage.getItem(s));
-                if(localConfirmList != null){
-                    this.confirmList = localConfirmList;
-                }
                 if(this.hasAdd){
                     this.confirmView = true;
-                    this.axios.get('/relation/getAdds?ppid=' + sessionStorage.getItem('ppid')).then(res => {
-                        if(res.data.code === '0000'){
-                            for(let i = 0; i < res.data.data.length; i++){
-                                this.confirmList.push(res.data.data[i]);
-                            }
-                        } else {
-                            Toast({
-                                message: '查询失败',
-                                position: 'bottom',
-                                duration: 2000
-                            });
-                        }
-                    }).catch(error => {
-                        Toast({
-                            message: '网络异常',
-                            position: 'bottom',
-                            duration: 2000
-                        });
-                        // eslint-disable-next-line no-console
-                        console.log(error);
-                    });
                 }else{
                     Toast({
                         message: '暂无新好友待确认',
@@ -180,9 +155,14 @@
                 }
             },
             confirm (item) {
-                this.axios.post('/relation/newRelation?uid1=' + item.uid1 + '&uid2=' + item.uid2).then(res => {
+                this.axios.post('/relation/newRelation?uid1=' + item.uid1 +
+                    '&uid2=' + item.uid2 +
+                    '&ppid1=' + item.ppid1 +
+                    '&ppid2=' + item.ppid2 +
+                    '&nickname2=' + item.nickname2).then(res => {
                     if(res.data.code === '0000'){
                         this.confirmList.splice(item.index, 1);
+                        this.$emit('addToFriendList', item);
                         Toast({
                             message: '添加成功',
                             position: 'bottom',
@@ -222,8 +202,6 @@
                     if(this.confirmList.length === 0){
                         this.$emit('hasLookedAdd', false);
                     }
-                    let s = sessionStorage.getItem('ppid') + '_add';
-                    localStorage.setItem(s, JSON.stringify(this.confirmList));
                     this.confirmView = false;
                 }else{
                     this.$emit('switchView', {chatShow: false, homeShow: true, addShow: false, settingShow: false});

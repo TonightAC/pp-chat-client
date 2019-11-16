@@ -102,6 +102,10 @@
                     nickname: String(friend.nickname),
                     messages: []
                 });
+            },
+            addToConfirmList (add) {
+                this.confirmList.push(add);
+                this.hasAdd = !(this.confirmList.length === 0);
             }
         }
     }

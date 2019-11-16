@@ -99,8 +99,10 @@
             },
             getMessage (msg) {
                 let result = JSON.parse(msg.data);
-                if(result.data === undefined){
+                if(result.ppid !== undefined){
                     this.$emit('addToFriendList', result);
+                }else if(result.verifyString !== undefined){
+                    this.$emit('addToConfirmList', result);
                 }else{
                     if(result.from === this.friend.ppid){
                         this.msgList.push({flag: true, data: result.data});
